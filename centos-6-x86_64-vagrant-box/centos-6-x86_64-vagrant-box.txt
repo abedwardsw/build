@@ -39,27 +39,14 @@ openssh-clients
 %end
 
 %post
-chkconfig ntpd on
-service ntpd stop
-ntpdate time.nist.gov
-service ntpd start
 
 chkconfig sshd on
 chkconfig iptables off
 chkconfig ip6tables off
 
-useradd vagrant
-
-mkdir -m 0700 -p /home/vagrant/.ssh
-
-curl https://raw.githubusercontent.com/mitchellh/vagrant/master/keys/vagrant.pub >> /home/vagrant/.ssh/authorized_keys
-
-chmod 600 /home/vagrant/.ssh/authorized_keys
-chown -R vagrant:vagrant /home/vagrant/.ssh
 
 sed -i 's/^\(Defaults.*requiretty\)/#\1/' /etc/sudoers
 
-echo "vagrant ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 
 cat << EOF1 > /etc/sysconfig/network-scripts/ifcfg-eth0
 DEVICE=eth0
@@ -78,6 +65,19 @@ rm -rf /tmp/*
 rm -f /var/log/wtmp /var/log/btmp
 
 history -c
-
+ifup eth0
 yum -y install wget curl git man vim ntp
+
+chkconfig ntpd on
+service ntpd stop
+ntpdate time.nist.gov
+service ntpd start
+
+useradd vagrant
+mkdir -m 0700 -p /home/vagrant/.ssh
+curl https://raw.githubusercontent.com/mitchellh/vagrant/master/keys/vagrant.pub >> /home/vagrant/.ssh/authorized_keys
+chmod 600 /home/vagrant/.ssh/authorized_keys
+chown -R vagrant:vagrant /home/vagrant/.ssh
+echo "vagrant ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+
 %end
