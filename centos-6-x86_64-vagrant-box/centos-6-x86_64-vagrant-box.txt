@@ -33,7 +33,6 @@ skipx
 shutdown
 
 %packages
-@core
 openssh-server
 openssh-clients
 %end
