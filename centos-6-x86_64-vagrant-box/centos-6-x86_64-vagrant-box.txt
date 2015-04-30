@@ -36,12 +36,6 @@ shutdown
 @core
 openssh-server
 openssh-clients
-wget
-curl
-git
-man
-vim
-ntp
 %end
 
 %post
@@ -84,4 +78,6 @@ rm -rf /tmp/*
 rm -f /var/log/wtmp /var/log/btmp
 
 history -c
+
+yum -y install wget curl git man vim ntp
 %end
