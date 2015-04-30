@@ -69,6 +69,8 @@ yum -y update
 yum -y install man git sysstat iostat gcc make perl unzip lsof nc perl-JSON wget curl ntp 
 yum -y install python httpd mailx net-tools epel-release vim mlocate bind-utils kernel-devel kernel-headers
 
+echo "alias vi='vim' >> /root/.bashrc"
+
 chkconfig ntpd on
 service ntpd stop
 ntpdate time.nist.gov
