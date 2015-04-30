@@ -32,7 +32,7 @@ skipx
 
 shutdown
 
-repo --name="CentOS" --baseurl=cdrom:sr0 --cost=100
+repo --name="CentOS" --baseurl=file:///mnt/source/ --cost=100
 
 %packages --nobase
 openssh-server
