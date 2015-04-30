@@ -32,7 +32,8 @@ skipx
 
 shutdown
 
-%packages
+%packages --nobase
+@core
 openssh-server
 openssh-clients
 %end
