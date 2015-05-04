@@ -68,7 +68,7 @@ rm -f /var/log/wtmp /var/log/btmp
 history -c
 ifup eth0
 yum -y update
-yum -y install man git sysstat iostat gcc make perl unzip lsof nc perl-JSON wget curl ntp 
+yum -y install man git sysstat iostat gcc make perl unzip lsof nc perl-JSON wget curl ntp dkms
 yum -y install python httpd mailx net-tools epel-release vim mlocate bind-utils kernel-devel kernel-headers
 
 echo "alias vi='vim' >> /root/.bashrc"
