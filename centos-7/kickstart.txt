@@ -80,7 +80,7 @@ service ntpd start
 
 useradd vagrant
 mkdir -m 0700 -p /home/vagrant/.ssh
-curl https://raw.githubusercontent.com/abedwards/build/keys/vagrant.pub >> /home/vagrant/.ssh/authorized_keys
+curl https://raw.githubusercontent.com/abedwardsw/build/master/keys/vagrant.pub >> /home/vagrant/.ssh/authorized_keys
 chmod 600 /home/vagrant/.ssh/authorized_keys
 chown -R vagrant:vagrant /home/vagrant/.ssh
 echo "vagrant ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
