@@ -1,0 +1,88 @@
+install
+text
+
+cdrom
+
+lang en_US.UTF-8
+keyboard us
+
+network --onboot yes --bootproto dhcp --noipv6
+
+timezone --utc America/Vancouver
+
+zerombr
+clearpart --all --initlabel
+bootloader --location=mbr --append="crashkernel=auto rhgb quiet"
+
+part /boot --fstype=ext4 --size=256
+part pv.01 --size=1024 --grow
+volgroup vg_root pv.01
+logvol swap --fstype swap --name=lv_swap --vgname=vg_root --size=1024
+logvol / --fstype=ext4 --name=lv_root --vgname=vg_root --size=1024 --grow
+
+authconfig --enableshadow --passalgo=sha512
+
+# rootpw is vagrant
+rootpw --iscrypted $1$dUDXSoA9$/bEOTiK9rmsVgccsYir8W0
+
+firewall --disabled
+selinux --permissive
+
+skipx
+
+shutdown
+
+repo --name="CentOS" --baseurl=file:///mnt/source/ --cost=100
+
+%packages --nobase
+openssh-server
+openssh-clients
+%end
+
+%post
+
+chkconfig sshd on
+chkconfig iptables off
+chkconfig ip6tables off
+
+
+sed -i 's/^\(Defaults.*requiretty\)/#\1/' /etc/sudoers
+
+
+cat << EOF1 > /etc/sysconfig/network-scripts/ifcfg-eth0
+DEVICE=eth0
+TYPE=Ethernet
+ONBOOT=yes
+NM_CONTROLLED=no
+BOOTPROTO=dhcp
+EOF1
+
+rm -f /etc/udev/rules.d/70-persistent-net.rules
+
+yum clean all
+
+rm -rf /tmp/*
+
+rm -f /var/log/wtmp /var/log/btmp
+
+history -c
+ifup eth0
+yum -y update
+yum -y install man git sysstat iostat gcc make perl unzip lsof nc perl-JSON wget curl ntp dkms
+yum -y install python httpd mailx net-tools epel-release vim mlocate bind-utils kernel-devel kernel-headers
+
+echo "alias vi='vim' >> /root/.bashrc"
+
+chkconfig ntpd on
+service ntpd stop
+ntpdate time.nist.gov
+service ntpd start
+
+useradd vagrant
+mkdir -m 0700 -p /home/vagrant/.ssh
+curl https://raw.githubusercontent.com/abedwards/build/keys/vagrant.pub >> /home/vagrant/.ssh/authorized_keys
+chmod 600 /home/vagrant/.ssh/authorized_keys
+chown -R vagrant:vagrant /home/vagrant/.ssh
+echo "vagrant ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+
+%end
